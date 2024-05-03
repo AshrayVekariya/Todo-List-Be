@@ -41,8 +41,6 @@ const createSubTask = async (req, res) => {
         if (assignSubTask) {
             assignSubTask.subTasks = [...assignSubTask.subTasks, addSubTask._id]
             await TaskList.findOneAndUpdate({ _id: assignSubTask._id }, assignSubTask)
-        } else {
-            return badRequestResponse(res, { message: 'Something want wrong!' })
         }
 
         const taskDetail = await SubTask.aggregate([
