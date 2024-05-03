@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Task</title>
+    <style>
+        body{
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            padding: 20px;
+        }
+        .respect{
+            margin-bottom: 30px;
+        }
+        .task{
+            margin: 20px 0px;
+        }
+        .thank-you{
+            margin-top: 30px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h2 class="respect">Hii <%= task.userDetail.firstName %>,</h2>
+    <p>I has Given You a New Task.</p>
+    <p class="task">Task : <b><%= task.taskName %></b></p>
+    <p>This Is A <%= task.prioriyDetail.priorityName %> Priority Task , So Consider Working On It, Once <%= task.prioriyDetail.priorityName %> Priority Task Complete. Try To Aim For Complitation By <%= task.deadline %></p>
+    <span class="thank-you">Thank you.</span>
+</body>
+</html>

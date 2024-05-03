@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminder Template</title>
+    <style>
+        body {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            padding: 20px;
+        }
+
+        .respect {
+            margin-bottom: 30px;
+        }
+
+        .task {
+            margin: 20px 0px;
+        }
+
+        .thank-you {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 class="respect">Hii <%= item.userDetail.firstName %>,</h2>
+    <div>
+        <% if(item.parentTask) { %>
+            <h3 class="task">Last date of your sub task (<%= item.taskName %>) of (<%= item.parentTask.taskName %>) task
+                        is <%= item.deadline %> which is still pending </h3>
+            <% } else{ %>
+                <h3 class="task">Last date of your (<%= item.taskName %>) task is 21-12-24 which is still pending</h3>
+                <% } %>
+    </div>
+    <p>Please complete of the tasks assigned to you that are due to be complete <%= item.deadline %>.</p>
+    <p class="thank-you">Thank you.</p>
+</body>
+
+</html>
