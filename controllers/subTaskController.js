@@ -35,7 +35,7 @@ const createSubTask = async (req, res) => {
         }
         if (body) {
             await Inbox.create(notificationBody);
-            sendNotification(user.fcmToken, notificationBody.message);
+            sendNotification(user.fcmToken, `assigned ${body.taskName} task to you`);
         }
 
         let assignSubTask = await TaskList.findById({ _id: new mongoose.Types.ObjectId(addSubTask.parentId) })
@@ -407,7 +407,7 @@ const updateSubTask = async (req, res) => {
 
             const fromStatus = await Status.findById(getTaskHistory.status);
             const toStatus = await Status.findById(body.status);
-            const user = await User.findById(body.userId);
+            const user = await User.findById(body.loggedUser);
 
             const notificationBody = {
                 userId: body.userId,
