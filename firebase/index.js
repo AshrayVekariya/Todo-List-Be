@@ -29,6 +29,7 @@ const sendNotification = async (token, message) => {
             message: message
         },
     }
+    
     try {
         await firebase.messaging().send(notificationDetails);
     } catch (error) {

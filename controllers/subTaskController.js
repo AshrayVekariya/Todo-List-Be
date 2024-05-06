@@ -408,6 +408,7 @@ const updateSubTask = async (req, res) => {
             const fromStatus = await Status.findById(getTaskHistory.status);
             const toStatus = await Status.findById(body.status);
             const user = await User.findById(body.loggedUser);
+            const updateUser = await User.findById(body.userId);
 
             const notificationBody = {
                 userId: body.userId,
@@ -419,7 +420,7 @@ const updateSubTask = async (req, res) => {
             if (body.status !== getTaskHistory.status) {
                 await StatusHistory.create(historyBody)
                 await Inbox.create(notificationBody);
-                sendNotification(user.fcmToken, `${user.firstName} ${user.lastName} changed status: ${fromStatus.statusName} to ${toStatus.statusName}`);
+                sendNotification(updateUser.fcmToken, `${user.firstName} ${user.lastName} changed status: ${fromStatus.statusName} to ${toStatus.statusName}`);
             }
 
             if (updateTask) {
