@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema(
         expireResetPasswordOTP: { type: Date, default: null },
         resetPasswordToken: { type: String, default: '' },
         expireResetPasswordToken: { type: Date, default: null },
-        password: { type: String, default: '' }
+        password: { type: String, default: '' },
+        fcmToken: { type: String, default: null}
     },
     { timestamps: true }
 )

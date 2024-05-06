@@ -10,6 +10,7 @@ const StatusHistory = require('../models/statusHistorySchema');
 const Inbox = require('../models/inboxSchema');
 const Status = require('../models/statusSchema');
 const User = require('../models/userSchema');
+const { sendNotification } = require('../firebase');
 
 const email = process.env.email
 const password = process.env.password
@@ -22,6 +23,7 @@ const createTask = async (req, res) => {
         if (existsTask) return existsResponse(res, { message: 'This task already added!' })
 
         const addTask = await TaskList.create(body);
+        const user = await User.findById(body.userId);
 
         const notificationBody = {
             userId: body.userId,
@@ -30,7 +32,8 @@ const createTask = async (req, res) => {
         }
 
         if (body) {
-            await Inbox.create(notificationBody)
+            await Inbox.create(notificationBody);
+            sendNotification(user.fcmToken, notificationBody.message);
         }
 
         const taskDetail = await TaskList.aggregate([
@@ -477,6 +480,7 @@ const updateTaskList = async (req, res) => {
             if (body.status !== getTaskHistory.status) {
                 await StatusHistory.create(historyBody)
                 await Inbox.create(notificationBody)
+                sendNotification(user.fcmToken, `${user.firstName} ${user.lastName} changed status :${fromStatus.statusName} to ${toStatus.statusName}`);
             }
 
             if (updateTask) {

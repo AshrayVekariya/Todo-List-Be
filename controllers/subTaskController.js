@@ -12,6 +12,7 @@ const StatusHistory = require('../models/statusHistorySchema');
 const Inbox = require('../models/inboxSchema');
 const Status = require('../models/statusSchema');
 const User = require('../models/userSchema');
+const { sendNotification } = require('../firebase');
 
 const email = process.env.email
 const password = process.env.password
@@ -23,21 +24,21 @@ const createSubTask = async (req, res) => {
         const existsTask = await SubTask.findOne({ taskName: body?.taskName })
         if (existsTask) return existsResponse(res, { message: 'This task already added!' })
 
-        const addSubTask = await SubTask.create(body)
+        const addSubTask = await SubTask.create(body);
 
+        const user = await User.findById(body.userId);
         const notificationBody = {
             userId: body.userId,
             taskId: addSubTask._id,
             message: "assigned this task to you",
             isSubTask: true
         }
-
         if (body) {
-            await Inbox.create(notificationBody)
+            await Inbox.create(notificationBody);
+            sendNotification(user.fcmToken, notificationBody.message);
         }
 
         let assignSubTask = await TaskList.findById({ _id: new mongoose.Types.ObjectId(addSubTask.parentId) })
-
         if (assignSubTask) {
             assignSubTask.subTasks = [...assignSubTask.subTasks, addSubTask._id]
             await TaskList.findOneAndUpdate({ _id: assignSubTask._id }, assignSubTask)
@@ -417,7 +418,8 @@ const updateSubTask = async (req, res) => {
 
             if (body.status !== getTaskHistory.status) {
                 await StatusHistory.create(historyBody)
-                await Inbox.create(notificationBody)
+                await Inbox.create(notificationBody);
+                sendNotification(user.fcmToken, `${user.firstName} ${user.lastName} changed status: ${fromStatus.statusName} to ${toStatus.statusName}`);
             }
 
             if (updateTask) {

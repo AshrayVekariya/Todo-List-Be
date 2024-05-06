@@ -33,6 +33,9 @@ const signIn = async (req, res) => {
             if (isMatch) {
                 const token = await generateAuthToken(user);
 
+                user.fcmToken = req.body.fcmToken
+                await User.findByIdAndUpdate({ _id: user._id }, user)
+
                 return successResponse(res, { token: token.token, data: user, message: "User login successfully" })
             } else {
                 return badRequestResponse(res, { message: "Incorrect username or password" })
